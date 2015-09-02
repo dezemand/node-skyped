@@ -1,0 +1,5 @@
+{
+  "name": "skyped",
+  "version": "0.0.1",
+  "description": "Connect to Skype using Skype4Py and WebSockets"
+}
