@@ -1,5 +1,10 @@
 {
   "name": "skyped",
   "version": "0.0.1",
-  "description": "Connect to Skype using Skype4Py and WebSockets"
+  "description": "Connect to Skype using Skype4Py and WebSockets",
+  "repository": "https://github.com/netraameht/node-skyped.git",
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^0.8.0"
+  }
 }
