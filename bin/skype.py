@@ -4,6 +4,9 @@ import json
 import websocket
 import sys
 
+def GetUsername(user):
+    return user.Handle
+
 def FormatMessageObject(msg):
     obj = {
         'id': msg.Id,
@@ -58,24 +61,21 @@ def FormatUserObject(user):
 def FormatChatObject(chat):
     obj = {
          'activityTimestamp': chat.ActivityTimestamp,
-         'adder': user_handle_mapper(chat.Adder),
-         'applicants': map(user_handle_mapper, chat.Applicants),
-         'blob': chat.Blob,
+         'adder': GetUsername(chat.Adder),
+         'applicants': map(GetUsername, chat.Applicants),
          'bookmarked': chat.Bookmarked,
          'description': chat.Description,
          'dialogPartner': chat.DialogPartner,
          'friendlyName': chat.FriendlyName,
          'guideLines': chat.GuideLines,
-         'members': map(user_handle_mapper, chat.Members),
+         'members': map(GetUsername, chat.Members),
          'myRole': chat.MyRole,
-         'myStatus': chat.MyStatus,
          'name': chat.Name,
          'passwordHint': chat.PasswordHint,
-         'posters': map(user_handle_mapper, chat.Posters),
+         'posters': map(GetUsername, chat.Posters),
          'status': chat.Status,
          'timestamp': chat.Timestamp,
-         'topic': chat.Topic,
-         'type': chat.Type
+         'topic': chat.Topic
     }
     return obj
 
@@ -108,8 +108,25 @@ def wsMessage(ws, message):
     elif obj['action'] == 'send':
         chat = skype.Chat(obj['room'])
         chat.SendMessage(obj['message'])
-    elif obj['action'] == '':
-        ws.
+    elif obj['action'] == 'init':
+        msg = {
+            'type': 'init'
+        }
+        ws.send(json.dumps(msg))
+    elif obj['action'] == 'userinfo':
+        msg = {
+            'type': 'userinfo',
+            'user': obj['user'],
+            'info': FormatUserObject(skype.User(obj['user']))
+        }
+        ws.send(json.dumps(msg))
+    elif obj['action'] == 'chatinfo':
+        msg = {
+            'type': 'chatinfo',
+            'handle': obj['handle'],
+            'info': FormatChatObject(skype.Chat(obj['handle']))
+        }
+        ws.send(json.dumps(msg))
 
 def wsError(ws, error):
     print 'Websocket error: ' + str(error)

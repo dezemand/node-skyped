@@ -1,10 +1,30 @@
 {
   "name": "skyped",
-  "version": "0.0.1",
+  "version": "0.0.3",
+  "main": "index.js",
+  "keywords": [
+    "skype",
+    "skype-api",
+    "bot",
+    "microsoft",
+    "chat",
+    "skype4py"
+  ],
+  "author": {
+    "email": "me@mand.me",
+    "name": "Johnny Gat"
+  },
+  "bugs": {
+    "url": "https://github.com/netraameht/node-skyped/issues"
+  },
   "description": "Connect to Skype using Skype4Py and WebSockets",
-  "repository": "https://github.com/netraameht/node-skyped.git",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/netraameht/node-skyped.git"
+  },
   "license": "MIT",
   "dependencies": {
+    "debug": "^2.2.0",
     "ws": "^0.8.0"
   }
 }
