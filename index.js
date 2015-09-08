@@ -32,7 +32,8 @@ var SkypeClass = function(options) {
     cl.send(JSON.stringify({action: 'init'}));
     cl.on('message', function(message) {
       var obj;
-      if(!(obj = JSON.sparse(message))) return log.ws('Unparsable message: %s', message);
+      if(!(obj = JSON.sparse(message))) return log.ws('unparsable message: %s', message);
+      if(!obj.type) return log.ws('could not get type of message: %s', message);
       if(obj.type == 'init') {
         if(client) return log.ws('received valid init command, but wont override original client');
         client = cl;
@@ -56,7 +57,7 @@ var SkypeClass = function(options) {
           delete cB.getUser[obj.user];
         }
       } else {
-        log.ws('Received unknown type: %s', obj.type);
+        log.ws('received unknown type: %s', obj.type);
       }
     });
     cl.on('close', function() {
@@ -89,19 +90,32 @@ var SkypeClass = function(options) {
     return true;
   };
   self.getUser = function(username, callback) {
-    if(!self.isConnected()) return false;
+    if(!self.isConnected()) return log.main('getUser not allowed: not connected');
     if(callback && typeof(callback) == 'function') cB.getUser[username] = callback;
     client.send(JSON.stringify({action: 'userinfo', user: username}));
   };
   self.getChat = function(handle, callback) {
-    if(!self.isConnected()) return false;
+    if(!self.isConnected()) return log.main('getChat not allowed: not connected');
     if(callback && typeof(callback) == 'function') cB.getChat[handle] = callback;
     client.send(JSON.stringify({action: 'chatinfo', handle: handle}));
   };
-  // TODO: Send message to chat & user
+  self.chatMessage = function(handle, body, callback) {
+    if(!self.isConnected()) return log.main('chatMessage not allowed: not connected');
+    if(!callback || typeof(callback) != 'function') callback = function() {};
+    client.send(JSON.stringify({action: 'chatmessage', room: handle, body: body}));
+  };
+  self.userMessage = function(username, body, callback) {
+    if(!self.isConnected()) return log.main('userMessage not allowed: not connected');
+    if(!callback || typeof(callback) != 'function') callback = function() {};
+    client.send(JSON.stringify({action: 'usermessage', user: username, body: body}));
+  };
 
   // -- Execution
-  // TODO: do something with the damn options
+  if(options && typeof(options) == 'object') {
+    if(options.port && typeof(options.port) == 'number') wsport = options.port;
+    if(options.host && typeof(options.host) == 'string') wshost = options.host;
+    if(options.start && options.start === true) self.init();
+  }
   return self;
 };
 

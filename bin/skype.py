@@ -127,6 +127,15 @@ def wsMessage(ws, message):
             'info': FormatChatObject(skype.Chat(obj['handle']))
         }
         ws.send(json.dumps(msg))
+    elif obj['action'] == 'chatmessage':
+        chat = skype.Chat(obj['room'])
+        chat.SendMessage(obj['body'])
+    elif obj['action'] == 'usermessage':
+        message = skype.SendMessage(obj['user'], obj['body'])
+        msg = {
+            'type': 'sendmessage',
+            'info': FormatMessageObject(message)
+        }
 
 def wsError(ws, error):
     print 'Websocket error: ' + str(error)
