@@ -2,6 +2,8 @@
 
 ## Notice
 
+**Discontinued, skype no longer uses p2p chats. Also Skype is getting or already has their own kinds of bots.**
+
 **skyped uses Skype4Py, which is no longer being updated and outdated. Skype4Py does not support cloud-based groupchats, so you wont receive *any* messages from those kind of chats. To make a P2P chat, use `/createmoderatedchat` in skype.**
 
 ## [Example](https://github.com/netraameht/node-skyped/blob/master/example.js)
